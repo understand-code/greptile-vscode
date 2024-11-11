@@ -1,0 +1,150 @@
+{
+  "name": "greptile-vscode",
+  "displayName": "Greptile",
+  "description": "Search and understand any repo in plain English.",
+  "categories": ["Programming Languages", "Machine Learning", "Debuggers", "Other"],
+  "keywords": ["search", "comprehension", "documentation", "productivity", "ai"],
+  "publisher": "Greptile",
+  "version": "1.0.5",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/greptileai/greptile-vscode"
+  },
+  "bugs": {
+    "url": "https://github.com/greptileai/greptile-vscode/issues"
+  },
+  "icon": "images/greptile/logo.png",
+  "galleryBanner": {
+    "color": "#000",
+    "theme": "dark"
+  },
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "main": "./dist/extension.js",
+  "contributes": {
+    "views": {
+      "greptileView": [
+        {
+          "type": "webview",
+          "id": "repositoryView",
+          "name": "Repositories"
+        },
+        {
+          "type": "webview",
+          "id": "chatView",
+          "name": "Chat"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "icon": "images/greptile/ab-logo.png",
+          "id": "greptileView",
+          "title": "Greptile"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "greptile.chat",
+        "title": "Greptile: Chat"
+      },
+      {
+        "command": "greptile.signIn",
+        "title": "Greptile: Sign In"
+      },
+      {
+        "command": "greptile.resetSession",
+        "title": "Greptile: Reset Session"
+      },
+      {
+        "command": "greptile.resetChat",
+        "title": "Greptile: Reset Chat",
+        "icon": "$(clear-all)"
+      },
+      {
+        "command": "greptile.reload",
+        "title": "Greptile: Sync Repositories",
+        "icon": "$(repo-sync)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "greptile.resetChat",
+          "when": "view == chatView",
+          "group": "navigation@1"
+        },
+        {
+          "command": "greptile.reload",
+          "when": "view == chatView",
+          "group": "navigation@0"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "greptile.chat",
+        "key": "cmd+l",
+        "mac": "cmd+l",
+        "when": "isMac"
+      },
+      {
+        "command": "greptile.chat",
+        "key": "ctrl+l",
+        "mac": "ctrl+l",
+        "when": "isWindows || isLinux"
+      },
+      {
+        "command": "greptile.resetChat",
+        "key": "cmd+shift+l",
+        "mac": "cmd+shift+l",
+        "when": "isMac"
+      },
+      {
+        "command": "greptile.resetChat",
+        "key": "ctrl+shift+l",
+        "mac": "ctrl+shift+l",
+        "when": "isWindows || isLinux"
+      }
+    ]
+  },
+  "scripts": {
+    "install:all": "npm install && cd webview-ui && npm install",
+    "start:webview": "cd webview-ui && npm run start",
+    "build:webview": "cd webview-ui && npm run build",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "vscode:prepublish": "npm run install:all && npm run build:webview && npm run esbuild-base -- --minify",
+    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "esbuild": "npm run esbuild-base -- --sourcemap",
+    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+    "test-compile": "tsc -p ./"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.3",
+    "@types/node": "^12.20.55",
+    "@types/vscode": "^1.46.0",
+    "@typescript-eslint/eslint-plugin": "^6.x",
+    "@typescript-eslint/parser": "^6.x",
+    "esbuild": "^0.20.1",
+    "eslint": "^7.19.0",
+    "glob": "^7.1.6",
+    "prettier": "2.8.8",
+    "typescript": "^5.3.3",
+    "vscode-test": "^1.5.0"
+  },
+  "dependencies": {
+    "@octokit/rest": "^20.0.2",
+    "@types/react": "^18.2.45",
+    "@vscode/codicons": "^0.0.35",
+    "ai": "^2.2.30",
+    "posthog-js": "^1.96.1",
+    "react": "^18.2.0"
+  }
+}
